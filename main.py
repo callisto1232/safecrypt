@@ -1,5 +1,6 @@
 import base64
 import json
+import time
 from io import BytesIO
 import os
 from dotenv import load_dotenv
@@ -34,6 +35,7 @@ app.add_middleware(
 
 class GenerateRequest(BaseModel):
     message: str
+    expiration: int = 60  # Expiration time in seconds (0 = never expires)
 
 class GenerateResponse(BaseModel):
     qr_image_base64: str
@@ -55,7 +57,9 @@ async def generate_qr(request: GenerateRequest):
     """
     # 1. Prepare the payload
     payload = {
-        "message": request.message
+        "message": request.message,
+        "expiration": request.expiration,
+        "created_at": time.time()
     }
     
     # 2. Convert payload to JSON bytes
@@ -99,13 +103,22 @@ async def scan_qr(request: ScanRequest):
     """
     try:
         # 1. Decrypt the ciphertext
-        # The ttl=60 parameter enforces that the token was generated within the last 60 seconds.
-        # If the token is older than 60 seconds or tampered with, InvalidToken is raised.
+        # We don't use Fernet's built-in TTL here because we want customizable expiration.
         ciphertext_bytes = request.ciphertext.encode('utf-8')
-        decrypted_bytes = fernet.decrypt(ciphertext_bytes, ttl=60)
+        decrypted_bytes = fernet.decrypt(ciphertext_bytes)
         
         # 2. Parse the decrypted JSON data
         decrypted_data = json.loads(decrypted_bytes.decode('utf-8'))
+        
+        # 3. Manually check expiration
+        expiration = decrypted_data.get("expiration", 60)
+        created_at = decrypted_data.get("created_at", 0)
+        
+        if expiration > 0 and time.time() > (created_at + expiration):
+            raise HTTPException(
+                status_code=400,
+                detail="The QR code has expired."
+            )
         
         return ScanResponse(
             success=True,
