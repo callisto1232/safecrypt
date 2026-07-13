@@ -1,33 +1,33 @@
 import { useState } from 'react'
-import Atm from './Atm'
+import Generator from './Generator'
 import Scanner from './Scanner'
 import './App.css'
 
 function App() {
-  const [activeTab, setActiveTab] = useState('atm')
+  const [activeTab, setActiveTab] = useState('generator')
 
   return (
     <div className="container">
       <header>
-        <h1>Secure QR System</h1>
+        <h1>Secure QR App</h1>
         <div className="tabs">
           <button 
-            className={activeTab === 'atm' ? 'active' : ''} 
-            onClick={() => setActiveTab('atm')}
+            className={activeTab === 'generator' ? 'active' : ''} 
+            onClick={() => setActiveTab('generator')}
           >
-            ATM View
+            Share Data
           </button>
           <button 
             className={activeTab === 'scanner' ? 'active' : ''} 
             onClick={() => setActiveTab('scanner')}
           >
-            Scanner App View
+            Scan QR
           </button>
         </div>
       </header>
 
       <main>
-        {activeTab === 'atm' && <Atm />}
+        {activeTab === 'generator' && <Generator />}
         {activeTab === 'scanner' && <Scanner />}
       </main>
     </div>

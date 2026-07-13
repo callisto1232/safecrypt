@@ -5,19 +5,19 @@
 ![React](https://img.shields.io/badge/React-18.3+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-blue.svg)
 
-A highly secure, end-to-end encrypted QR code transaction system simulating ATM-to-banking-app interactions.
+A highly secure, end-to-end encrypted QR code messaging system for sharing sensitive data via QR codes.
 
 ## Overview
 
-SafeCrypt is a robust security demonstration project that enables stateless, secure data transfer via physical QR codes. It was built to solve the problem of transmitting sensitive financial data (like withdrawal amounts and user IDs) across an untrusted visual medium (a public screen) to a mobile device.
+SafeCrypt is a robust security demonstration project that enables stateless, secure data transfer via physical or digital QR codes. It was built to solve the problem of transmitting sensitive data (like secret messages, passwords, or personal info) across an untrusted visual medium to another device.
 
-The system uses symmetric AES-128 encryption (via Fernet) to ensure that the QR codes contain **zero human-readable data**. It features built-in replay attack prevention via cryptographic timestamping, ensuring that a intercepted or photographed QR code becomes useless after 60 seconds.
+The system uses symmetric AES-128 encryption (via Fernet) to ensure that the QR codes contain **zero human-readable data**. It features built-in replay attack prevention via cryptographic timestamping, ensuring that an intercepted or photographed QR code becomes useless after 60 seconds.
 
 ### Key Features
 *   **Zero-Knowledge QR Codes:** Payloads are 100% ciphertext.
 *   **Anti-Replay Architecture:** Cryptographic 60-second Time-To-Live (TTL) prevents QR code reuse.
 *   **Tamper-Proof:** SHA256 HMAC signatures guarantee data integrity.
-*   **Dual-Interface Frontend:** Includes both the "ATM" generator and the "Scanner" mobile web app.
+*   **Dual-Interface Frontend:** Includes both the "Share Data" generator and the "Scan QR" mobile web app.
 
 ---
 
@@ -32,7 +32,7 @@ The system uses symmetric AES-128 encryption (via Fernet) to ensure that the QR 
 1.  **ATM Frontend** requests a transaction.
 2.  **Backend** bundles data, encrypts it with AES-128, embeds a timestamp, and returns a Base64 PNG of the ciphertext.
 3.  **Scanner Frontend** reads the visual QR code and POSTs the ciphertext back to the server.
-4.  **Backend** validates the HMAC signature, checks the TTL (< 60s), decrypts the data, and authorizes the transaction.
+4.  **Backend** validates the HMAC signature, checks the TTL (< 60s), decrypts the data, and returns the message.
 
 ---
 
@@ -99,11 +99,11 @@ npm run dev -- --host 0.0.0.0
 
 ### Workflows
 1.  Navigate to `http://localhost:5173` on your computer.
-2.  On the **ATM View**, enter an amount and click "Generate QR Code".
+2.  On the **Share Data**, enter a secret message and click "Generate QR Code".
 3.  Using your smartphone (connected to the same Wi-Fi network), navigate to `http://<YOUR_COMPUTER_IP>:5173`.
-4.  Switch to the **Scanner App View**.
+4.  Switch to the **Scan QR** tab.
 5.  Point your phone's camera at your computer screen to scan the QR code.
-6.  The app will securely decrypt the payload and display the digital receipt!
+6.  The app will securely decrypt the payload and display the secret message!
 
 ---
 

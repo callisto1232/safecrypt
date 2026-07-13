@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-export default function Atm() {
-  const [amount, setAmount] = useState('')
+export default function Generator() {
+  const [message, setMessage] = useState('')
   const [qrCode, setQrCode] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -15,9 +15,7 @@ export default function Atm() {
 
     try {
       const response = await axios.post(`http://${window.location.hostname}:8000/api/qr/generate`, {
-        user_id: "user_12345",
-        transaction_id: `txn_${Date.now()}`,
-        amount: parseFloat(amount)
+        message: message
       })
       setQrCode(response.data.qr_image_base64)
     } catch (err) {
@@ -29,20 +27,18 @@ export default function Atm() {
 
   return (
     <div className="card atm-card">
-      <h2>ATM Withdrawal</h2>
-      <p>Enter the amount to withdraw and scan the QR code with your banking app.</p>
+      <h2>Generate Secure QR</h2>
+      <p>Enter a secret message to securely share with another device.</p>
       
       <form onSubmit={handleGenerate}>
         <div className="form-group">
-          <label>Amount ($)</label>
+          <label>Secret Message</label>
           <input 
-            type="number" 
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            type="text" 
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             required 
-            min="1"
-            step="0.01"
-            placeholder="e.g. 50.00"
+            placeholder="e.g., Meet me at 5 PM."
           />
         </div>
         <button type="submit" disabled={loading}>
@@ -54,7 +50,7 @@ export default function Atm() {
 
       {qrCode && (
         <div className="qr-container">
-          <h3>Scan with Banking App</h3>
+          <h3>Scan with the Scanner App</h3>
           <img src={qrCode} alt="Transaction QR Code" className="qr-image" />
           <p className="timer-warning">Warning: This QR code expires in 60 seconds.</p>
         </div>

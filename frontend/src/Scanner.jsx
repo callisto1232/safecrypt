@@ -54,8 +54,8 @@ export default function Scanner() {
 
   return (
     <div className="card scanner-card">
-      <h2>Mobile Banking App</h2>
-      <p>Scan the ATM QR code to authorize the transaction.</p>
+      <h2>Secure QR Scanner</h2>
+      <p>Scan a generated secure QR code to decrypt the message.</p>
       
       {scanning ? (
         <div id="reader" className="scanner-container"></div>
@@ -69,11 +69,10 @@ export default function Scanner() {
             </div>
           ) : scanResult ? (
             <div className="success-box">
-              <h3>Transaction Authorized ✅</h3>
+              <h3>Message Decrypted ✅</h3>
               <div className="receipt">
-                <p><strong>User ID:</strong> {scanResult.user_id}</p>
-                <p><strong>Transaction ID:</strong> {scanResult.transaction_id}</p>
-                <p><strong>Amount:</strong> ${scanResult.amount.toFixed(2)}</p>
+                <p><strong>Secret Message:</strong></p>
+                <p style={{fontSize: '1.2em', color: '#1f2937'}}>{scanResult.message}</p>
               </div>
               <button onClick={resetScanner}>Scan Another</button>
             </div>

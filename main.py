@@ -33,9 +33,7 @@ app.add_middleware(
 # --- Pydantic Models for Request & Response Validation ---
 
 class GenerateRequest(BaseModel):
-    user_id: str
-    transaction_id: str
-    amount: float
+    message: str
 
 class GenerateResponse(BaseModel):
     qr_image_base64: str
@@ -57,9 +55,7 @@ async def generate_qr(request: GenerateRequest):
     """
     # 1. Prepare the payload
     payload = {
-        "user_id": request.user_id,
-        "transaction_id": request.transaction_id,
-        "amount": request.amount
+        "message": request.message
     }
     
     # 2. Convert payload to JSON bytes
