@@ -49,7 +49,7 @@ Before installing, ensure you have the following installed on your system:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/safecrypt.git
+git clone https://github.com/callisto1232/safecrypt.git
 cd safecrypt
 ```
 
@@ -155,4 +155,3 @@ This project is licensed under the **MIT License**.
 You are free to use, modify, and distribute this software for personal or commercial purposes, provided the original copyright notice is included. See the `LICENSE` file for details.
 
 ---
-*Developed by the SafeCrypt Security Team.*
