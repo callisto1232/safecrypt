@@ -4,7 +4,6 @@ import axios from 'axios'
 export default function Generator() {
   const [message, setMessage] = useState('')
   const [expiration, setExpiration] = useState(60)
-  const [encryptionType, setEncryptionType] = useState('SYM')
   const [qrCode, setQrCode] = useState(null)
   const [qrData, setQrData] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -20,8 +19,7 @@ export default function Generator() {
     try {
       const response = await axios.post(`http://${window.location.hostname}:8000/api/qr/generate`, {
         message: message,
-        expiration: parseInt(expiration),
-        encryption_type: encryptionType
+        expiration: parseInt(expiration)
       })
       setQrCode(response.data.qr_image_base64)
       setQrData(response.data)
@@ -61,20 +59,6 @@ export default function Generator() {
             <option value={0}>Never Expires</option>
           </select>
         </div>
-        <div className="form-group">
-          <label>Encryption Method</label>
-          <select 
-            value={encryptionType} 
-            onChange={(e) => setEncryptionType(e.target.value)}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '16px' }}
-          >
-            <option value="SYM">Symmetric (AES-128 via Fernet)</option>
-            <option value="ASY">Asymmetric (RSA-2048 with OAEP Padding)</option>
-          </select>
-          <p style={{fontSize: '12px', color: '#6b7280', marginTop: '5px'}}>
-            {encryptionType === 'SYM' ? 'Fast and uses a shared secret key. Secure as long as the key is never leaked.' : 'Uses a Public Key to encrypt. Even if the generator is compromised, it cannot decrypt the data!'}
-          </p>
-        </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Generating...' : 'Generate QR Code'}
         </button>
@@ -95,7 +79,7 @@ export default function Generator() {
             </pre>
 
             <p style={{marginTop: '20px'}}><strong>Step 2: Encryption</strong><br/>
-              <span style={{fontSize: '12px', color: '#64748b'}}>The JSON is converted to bytes and encrypted using {encryptionType === 'SYM' ? 'AES-128' : 'RSA-2048'}.</span>
+              <span style={{fontSize: '12px', color: '#64748b'}}>The JSON is converted to bytes and encrypted using AES-128 via Fernet.</span>
             </p>
             <div style={{wordBreak: 'break-all', background: '#f1f5f9', padding: '10px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '12px', fontFamily: 'monospace', color: '#ef4444'}}>
               {qrData.qr_raw_data.substring(0, 100)}...<span style={{color: '#94a3b8'}}>(truncated for display)</span>

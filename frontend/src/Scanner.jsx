@@ -58,7 +58,7 @@ export default function Scanner() {
         ciphertext
       })
       
-      addLog(`[+] Encryption Detected: ${response.data.encryption_type}`)
+      addLog(`[+] Encryption Detected: Symmetric (AES)`)
       await sleep(800)
       addLog(`[+] Applying Cryptographic Key...`)
       await sleep(500)
