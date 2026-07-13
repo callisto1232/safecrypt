@@ -9,6 +9,7 @@ export default defineConfig({
     basicSsl()
   ],
   server: {
-    https: true
+    https: true,
+    host: '0.0.0.0'
   }
 })
